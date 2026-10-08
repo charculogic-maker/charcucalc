@@ -1,0 +1,71 @@
+{
+  "2.222.1": {
+    "id": "2.222.1",
+    "kategorie": "Brühwurst",
+    "name": "Schinkenwurst / Brühwurst fein",
+    "minBEFFE": 8.0,
+    "maxFett": 30.0
+  },
+  "2.223.1": {
+    "id": "2.223.1",
+    "kategorie": "Brühwurst",
+    "name": "Schinkenspicker / Bierwurst mit Einlage",
+    "minBEFFE": 9.5,
+    "maxFett": 28.0
+  },
+  "2.4.2.2.6": {
+    "id": "2.4.2.2.6",
+    "kategorie": "Brühwurst",
+    "name": "Gelbwurst / Kalbskäse",
+    "minBEFFE": 9.5,
+    "maxFett": 30.0
+  },
+  "2.2312.1": {
+    "id": "2.2312.1",
+    "kategorie": "Kochwurst",
+    "name": "Deli Leberwurst fein",
+    "minBEFFE": 10.0,
+    "maxFett": 35.0
+  },
+  "2.2312.6": {
+    "id": "2.2312.6",
+    "kategorie": "Kochwurst",
+    "name": "Grobe Hausmacher Leberwurst",
+    "minBEFFE": 7.5,
+    "maxFett": 40.0
+  },
+  "2.232.3": {
+    "id": "2.232.3",
+    "kategorie": "Kochwurst",
+    "name": "Hausmacher Rotwurst / Blutwurst",
+    "minMFE": 35.0,
+    "maxFett": 35.0
+  },
+  "2.2333.4": {
+    "id": "2.2333.4",
+    "kategorie": "Kochwurst",
+    "name": "Schwartemagen",
+    "minMFE": 30.0,
+    "maxFett": 30.0
+  },
+  "2.1.1": {
+    "id": "2.1.1",
+    "kategorie": "Feinkostsalat",
+    "name": "Fleischsalat (Standard)",
+    "minFleischbrät": 28.0,
+    "maxGurke": 25.0
+  },
+  "2.1.2": {
+    "id": "2.1.2",
+    "kategorie": "Feinkostsalat",
+    "name": "Delikatess-Fleischsalat",
+    "minFleischbrät": 34.0,
+    "maxGurke": 16.0
+  },
+  "2.1.4": {
+    "id": "2.1.4",
+    "kategorie": "Feinkostsalat",
+    "name": "Wurstsalat",
+    "minWurst": 50.0
+  }
+}
