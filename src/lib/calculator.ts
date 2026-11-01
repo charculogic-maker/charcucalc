@@ -1,62 +1,33 @@
+/**
+ * CharcuCalc recipe engine — wraps `@charculogic/fleisch-core`.
+ */
+
+import {
+  checkProduktLeitsatz,
+  computeBig7,
+  formatAveryLabel as formatAveryLabelCore,
+  formatBig7Clipboard as formatBig7ClipboardCore,
+  formatDeNumber,
+  big7Rows as big7RowsCore,
+  type Big7,
+  type Big7Row,
+  type Fleischklasse,
+  type LeitsatzDeviation,
+  type LeitsatzKategorie,
+  type LeitsatzStatus,
+  type ProduktLeitsatz,
+} from "@charculogic/fleisch-core";
+
 export type Lager = "FRIDGE" | "FREEZER";
 
-export type MeatClass = {
-  id: string;
-  code: string;
-  name: string;
-  wasser: number;
-  fett: number;
-  ges_fs: number;
-  be: number;
-  beffe: number;
-  temp_soll: number;
-  lager: Lager;
-};
-
-export type LeitsatzKategorie = "Brühwurst" | "Kochwurst" | "Feinkostsalat";
-
-export type Leitsatz = {
-  id: string;
-  kategorie: LeitsatzKategorie;
-  name: string;
-  minBEFFE?: number;
-  maxFett?: number;
-  minMFE?: number;
-  minFleischbrät?: number;
-  maxGurke?: number;
-  minWurst?: number;
-};
+export type MeatClass = Fleischklasse;
+export type Leitsatz = ProduktLeitsatz;
+export type { LeitsatzKategorie, Big7, Big7Row };
+export type Deviation = LeitsatzDeviation;
 
 export type MassShare = {
   kg: number;
   percent: number;
-};
-
-export type Deviation = {
-  id: string;
-  label: string;
-  actual: number;
-  limit: number;
-  delta: number;
-  direction: "min" | "max";
-  failed: boolean;
-};
-
-export type LeitsatzStatus = {
-  passed: boolean;
-  message: string;
-  deviations: Deviation[];
-};
-
-export type Big7 = {
-  fett: number;
-  gesaettigteFettsaeuren: number;
-  eiweiss: number;
-  kohlenhydrate: number;
-  zucker: number;
-  salz: number;
-  brennwertKcal: number;
-  brennwertKj: number;
 };
 
 export type RecipeResult = {
@@ -71,15 +42,6 @@ export type RecipeResult = {
   big7: Big7;
 };
 
-export type Big7Row = {
-  label: string;
-  value: string;
-  indent: boolean;
-};
-
-const SPICE_CARBS_G = 0.5;
-const SPICE_SUGAR_G = 0.2;
-
 export function parseAmount(value: string): number {
   const normalized = value.trim().replace(",", ".");
   if (normalized === "" || normalized === ".") return 0;
@@ -88,16 +50,8 @@ export function parseAmount(value: string): number {
   return parsed;
 }
 
-function roundTo(value: number, digits: number): number {
-  const factor = 10 ** digits;
-  return Math.round((value + Number.EPSILON) * factor) / factor;
-}
-
 export function formatDe(value: number, digits: number): string {
-  return new Intl.NumberFormat("de-DE", {
-    minimumFractionDigits: digits,
-    maximumFractionDigits: digits,
-  }).format(value);
+  return formatDeNumber(value, digits);
 }
 
 export function formatSigned(value: number, digits: number): string {
@@ -123,108 +77,6 @@ function share(kg: number, totalKg: number): MassShare {
 
 function positiveAmount(value: number | undefined): number {
   return value != null && Number.isFinite(value) && value > 0 ? value : 0;
-}
-
-function pushLimit(
-  deviations: Deviation[],
-  check: {
-    id: string;
-    label: string;
-    actual: number;
-    limit: number | undefined;
-    direction: "min" | "max";
-  },
-) {
-  if (check.limit == null) return;
-  const actual = roundTo(check.actual, 1);
-  const delta = roundTo(actual - check.limit, 1);
-  deviations.push({
-    id: check.id,
-    label: check.label,
-    actual,
-    limit: check.limit,
-    delta,
-    direction: check.direction,
-    failed: check.direction === "min" ? actual < check.limit : actual > check.limit,
-  });
-}
-
-function checkLeitsatz(
-  leitsatz: Leitsatz,
-  actuals: {
-    beffe: number;
-    fett: number;
-    mfe: number;
-    fleischbraet: number;
-    gurke: number;
-    wurst: number;
-  },
-  hasMass: boolean,
-): LeitsatzStatus {
-  if (!hasMass) {
-    return { passed: false, message: "Keine Einwaage", deviations: [] };
-  }
-
-  const deviations: Deviation[] = [];
-  pushLimit(deviations, {
-    id: "beffe",
-    label: "BEFFE",
-    actual: actuals.beffe,
-    limit: leitsatz.minBEFFE,
-    direction: "min",
-  });
-  pushLimit(deviations, {
-    id: "mfe",
-    label: "MFE",
-    actual: actuals.mfe,
-    limit: leitsatz.minMFE,
-    direction: "min",
-  });
-  pushLimit(deviations, {
-    id: "fett",
-    label: "Fett",
-    actual: actuals.fett,
-    limit: leitsatz.maxFett,
-    direction: "max",
-  });
-  pushLimit(deviations, {
-    id: "fleischbraet",
-    label: "Fleischbrät",
-    actual: actuals.fleischbraet,
-    limit: leitsatz.minFleischbrät,
-    direction: "min",
-  });
-  pushLimit(deviations, {
-    id: "gurke",
-    label: "Gurke",
-    actual: actuals.gurke,
-    limit: leitsatz.maxGurke,
-    direction: "max",
-  });
-  pushLimit(deviations, {
-    id: "wurst",
-    label: "Wurst",
-    actual: actuals.wurst,
-    limit: leitsatz.minWurst,
-    direction: "min",
-  });
-
-  const failures = deviations.filter((item) => item.failed);
-  if (failures.length === 0) {
-    return { passed: true, message: "Leitsatz konform", deviations };
-  }
-
-  const details = failures.map((item) => {
-    const reason =
-      item.direction === "min" ? `${item.label} zu niedrig` : `${item.label} zu hoch`;
-    return `${reason} (${formatSigned(item.delta, 1)} %)`;
-  });
-
-  return {
-    passed: false,
-    message: `Leitsatz nicht erfüllt: ${details.join(" / ")}`,
-    deviations,
-  };
 }
 
 export function calculateRecipe(input: {
@@ -271,12 +123,17 @@ export function calculateRecipe(input: {
   const mfe = share(beffeKg + beKg, totalKg);
   const hasMass = totalKg > 0;
   const saltGrams = hasMass ? positiveAmount(input.saltGrams) : 0;
-  const fettG = fett.percent;
-  const eiweiss = mfe.percent;
-  const kohlenhydrate = hasMass ? SPICE_CARBS_G : 0;
-  const zucker = hasMass ? SPICE_SUGAR_G : 0;
-  const salz = hasMass ? saltGrams / (totalKg * 10) : 0;
-  const brennwertKcal = fettG * 9 + eiweiss * 4 + kohlenhydrate * 4;
+
+  const big7 = computeBig7(
+    {
+      totalProductKg: totalKg,
+      totalMeatKg: classKg,
+      fatPercentage: fett.percent,
+      saturatedFatPercentage: gesaettigteFettsaeuren.percent,
+      totalProteinPercentage: mfe.percent,
+    },
+    { saltGrams },
+  );
 
   return {
     totalKg,
@@ -286,7 +143,7 @@ export function calculateRecipe(input: {
     fett,
     gesaettigteFettsaeuren,
     mfe,
-    leitsatz: checkLeitsatz(
+    leitsatz: checkProduktLeitsatz(
       input.leitsatz,
       {
         beffe: beffe.percent,
@@ -298,51 +155,18 @@ export function calculateRecipe(input: {
       },
       hasMass,
     ),
-    big7: {
-      fett: fettG,
-      gesaettigteFettsaeuren: gesaettigteFettsaeuren.percent,
-      eiweiss,
-      kohlenhydrate,
-      zucker,
-      salz,
-      brennwertKcal,
-      brennwertKj: brennwertKcal * 4.184,
-    },
+    big7,
   };
 }
 
 export function big7Rows(big7: Big7): Big7Row[] {
-  const grams = (value: number) => `${formatDe(value, 1)} g`;
-
-  return [
-    {
-      label: "Brennwert",
-      value: `${formatDe(big7.brennwertKj, 0)} kJ / ${formatDe(big7.brennwertKcal, 0)} kcal`,
-      indent: false,
-    },
-    { label: "Fett", value: grams(big7.fett), indent: false },
-    {
-      label: "davon gesättigte Fettsäuren",
-      value: grams(big7.gesaettigteFettsaeuren),
-      indent: true,
-    },
-    { label: "Kohlenhydrate", value: grams(big7.kohlenhydrate), indent: false },
-    { label: "davon Zucker", value: grams(big7.zucker), indent: true },
-    { label: "Eiweiß", value: grams(big7.eiweiss), indent: false },
-    { label: "Salz", value: grams(big7.salz), indent: false },
-  ];
+  return big7RowsCore(big7);
 }
 
 export function formatBig7Clipboard(big7: Big7): string {
-  const lines = big7Rows(big7).map(
-    (row) => `${row.indent ? "  " : ""}${row.label}: ${row.value}`,
-  );
-  return ["Nährwertdeklaration je 100 g", ...lines].join("\n");
+  return formatBig7ClipboardCore(big7);
 }
 
 export function formatAveryLabel(product: string, big7: Big7): string {
-  const lines = big7Rows(big7).map(
-    (row) => `${row.indent ? "  " : ""}${row.label} ${row.value}`,
-  );
-  return [product, "Nährwerte je 100 g", ...lines].join("\n");
+  return formatAveryLabelCore(product, big7);
 }

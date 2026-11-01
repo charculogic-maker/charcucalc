@@ -1,0 +1,21 @@
+{
+  "name": "@charculogic/fleisch-core",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared GEHA/Bizerba meat classes, product Leitsätze, BIG-7/Avery helpers for CharcuLogicOS and CharcuCalc.",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}
