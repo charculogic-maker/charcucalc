@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import fleischklassenData from "@/data/fleischklassen.json";
-import leitsaetzeData from "@/data/leitsatze.json";
+import {
+  FLEISCHKLASSEN,
+  PRODUKT_LEITSAETZE,
+} from "@charculogic/fleisch-core";
 import {
   big7Rows,
   calculateRecipe,
@@ -19,8 +21,8 @@ import {
   type MeatClass,
 } from "@/lib/calculator";
 
-const fleischklassen = Object.values(fleischklassenData) as MeatClass[];
-const leitsaetze = Object.values(leitsaetzeData) as Leitsatz[];
+const fleischklassen = Object.values(FLEISCHKLASSEN) as MeatClass[];
+const leitsaetze = Object.values(PRODUKT_LEITSAETZE) as Leitsatz[];
 const porkClasses = fleischklassen.filter((item) => item.id.startsWith("S_"));
 const beefClasses = fleischklassen.filter((item) => item.id.startsWith("R_"));
 const waterClass = fleischklassen.find((item) => item.id === "EIS");

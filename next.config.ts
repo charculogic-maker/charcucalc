@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  transpilePackages: ["@charculogic/fleisch-core"],
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
