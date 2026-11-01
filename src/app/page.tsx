@@ -14,6 +14,10 @@ import {
   formatKg,
   formatSigned,
   parseAmount,
+  saladCharakterLabel,
+  saladMinCharakter,
+  usesEinlageLimits,
+  usesSaladLimits,
   type Deviation,
   type Lager,
   type Leitsatz,
@@ -29,8 +33,9 @@ const waterClass = fleischklassen.find((item) => item.id === "EIS");
 
 const CATEGORIES: { id: LeitsatzKategorie; label: string }[] = [
   { id: "Brühwurst", label: "Brühwurst" },
+  { id: "Rohwurst", label: "Rohwurst" },
   { id: "Kochwurst", label: "Kochwurst" },
-  { id: "Feinkostsalat", label: "Feinkostsalate" },
+  { id: "Feinkostsalat", label: "Feinkost" },
 ];
 
 const PARTIAL_AMOUNT = /^(\d+([.,]\d*)?|[.,]\d*)?$/;
@@ -43,17 +48,29 @@ function limitLine(leitsatz: Leitsatz): string {
   if (leitsatz.minMFE != null) {
     parts.push(`MFE mind. ${formatDe(leitsatz.minMFE, 1)} %`);
   }
+  if (leitsatz.minEinlage != null) {
+    parts.push(
+      `Muskelfleischeinlage mind. ${formatDe(leitsatz.minEinlage, 1)} %`,
+    );
+  }
   if (leitsatz.maxFett != null) {
     parts.push(`Fett max. ${formatDe(leitsatz.maxFett, 1)} %`);
   }
-  if (leitsatz.minFleischbrät != null) {
-    parts.push(`Fleischbrät mind. ${formatDe(leitsatz.minFleischbrät, 1)} %`);
+  const minCharakter = saladMinCharakter(leitsatz);
+  if (minCharakter != null) {
+    parts.push(
+      `${saladCharakterLabel(leitsatz)} mind. ${formatDe(minCharakter, 1)} %`,
+    );
   }
   if (leitsatz.maxGurke != null) {
-    parts.push(`Gurke max. ${formatDe(leitsatz.maxGurke, 1)} %`);
+    parts.push(
+      `Gurke / würzende Zutaten max. ${formatDe(leitsatz.maxGurke, 1)} %`,
+    );
   }
-  if (leitsatz.minWurst != null) {
-    parts.push(`Wurst mind. ${formatDe(leitsatz.minWurst, 1)} %`);
+  if (leitsatz.minFesteBestandteile != null) {
+    parts.push(
+      `Feste Bestandteile mind. ${formatDe(leitsatz.minFesteBestandteile, 1)} %`,
+    );
   }
   return parts.join(" · ");
 }
@@ -214,6 +231,8 @@ export default function Home() {
     visibleLeitsaetze.find((item) => item.id === leitsatzId) ??
     visibleLeitsaetze[0] ??
     leitsaetze[0];
+  const saladMode = usesSaladLimits(leitsatz);
+  const einlageMode = usesEinlageLimits(leitsatz);
   const amountsKg = Object.fromEntries(
     fleischklassen.map((meatClass) => [
       meatClass.id,
@@ -225,9 +244,11 @@ export default function Home() {
     amountsKg,
     saltGrams: parseAmount(salt),
     leitsatz,
-    fleischbraetKg: parseAmount(amounts.fleischbraet ?? ""),
+    charakterKg: parseAmount(amounts.charakter ?? ""),
     gurkeKg: parseAmount(amounts.gurke ?? ""),
-    wurstKg: parseAmount(amounts.wurst ?? ""),
+    festeKg: parseAmount(amounts.feste ?? ""),
+    sosseKg: parseAmount(amounts.sosse ?? ""),
+    grundmasseKg: parseAmount(amounts.grundmasse ?? ""),
   });
   const tone =
     result.totalKg <= 0 ? "idle" : result.leitsatz.passed ? "pass" : "fail";
@@ -235,6 +256,8 @@ export default function Home() {
   const beffeDeviation = deviationOf(result.leitsatz.deviations, "beffe");
   const fettDeviation = deviationOf(result.leitsatz.deviations, "fett");
   const mfeDeviation = deviationOf(result.leitsatz.deviations, "mfe");
+  const einlageDeviation = deviationOf(result.leitsatz.deviations, "einlage");
+  const minCharakter = saladMinCharakter(leitsatz);
 
   useEffect(() => {
     if (!copyState) return;
@@ -314,7 +337,7 @@ export default function Home() {
           <div
             role="tablist"
             aria-label="Leitsatzkategorie"
-            className="mt-4 grid grid-cols-3 gap-2"
+            className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4"
           >
             {CATEGORIES.map((item) => {
               const selected = category === item.id;
@@ -357,90 +380,133 @@ export default function Home() {
             </span>
           </div>
           <p className="mt-2 text-sm text-zinc-400">{limitLine(leitsatz)}</p>
+          {leitsatz.quelle ? (
+            <p className="mt-1 text-xs text-zinc-500">{leitsatz.quelle}</p>
+          ) : null}
 
-          <ClassGroup
-            title="Schwein"
-            classes={porkClasses}
-            amounts={amounts}
-            onChange={updateAmount}
-          />
-          <ClassGroup
-            title="Rind"
-            classes={beefClasses}
-            amounts={amounts}
-            onChange={updateAmount}
-          />
-
-          <section className="mt-6">
-            <h2 className="text-sm font-medium tracking-wide text-zinc-400 uppercase">
-              Zusätze
-            </h2>
-            <div className="mt-1">
-              {waterClass ? (
-                <AmountRow
-                  id={waterClass.id}
-                  code={waterClass.code}
-                  name={waterClass.name}
-                  hint="100 % Wasser"
-                  unit="kg"
-                  value={amounts[waterClass.id] ?? ""}
-                  onChange={(value) => updateAmount(waterClass.id, value)}
-                  tempSoll={waterClass.temp_soll}
-                  lager={waterClass.lager}
-                />
-              ) : null}
-              <AmountRow
-                id="salz"
-                name="Kochsalz / Nitritpökelsalz"
-                hint="Absolute Menge in der Charge"
-                unit="g"
-                value={salt}
-                onChange={setSalt}
+          {!saladMode ? (
+            <>
+              <ClassGroup
+                title="Schwein"
+                classes={porkClasses}
+                amounts={amounts}
+                onChange={updateAmount}
               />
-            </div>
-          </section>
+              <ClassGroup
+                title="Rind"
+                classes={beefClasses}
+                amounts={amounts}
+                onChange={updateAmount}
+              />
 
-          {leitsatz.minFleischbrät != null ||
-          leitsatz.maxGurke != null ||
-          leitsatz.minWurst != null ? (
+              <section className="mt-6">
+                <h2 className="text-sm font-medium tracking-wide text-zinc-400 uppercase">
+                  Zusätze
+                </h2>
+                <div className="mt-1">
+                  {waterClass ? (
+                    <AmountRow
+                      id={waterClass.id}
+                      code={waterClass.code}
+                      name={waterClass.name}
+                      hint="100 % Wasser"
+                      unit="kg"
+                      value={amounts[waterClass.id] ?? ""}
+                      onChange={(value) => updateAmount(waterClass.id, value)}
+                      tempSoll={waterClass.temp_soll}
+                      lager={waterClass.lager}
+                    />
+                  ) : null}
+                  <AmountRow
+                    id="salz"
+                    name="Kochsalz / Nitritpökelsalz"
+                    hint="Absolute Menge in der Charge"
+                    unit="g"
+                    value={salt}
+                    onChange={setSalt}
+                  />
+                </div>
+              </section>
+            </>
+          ) : null}
+
+          {einlageMode ? (
+            <section className="mt-6">
+              <h2 className="text-sm font-medium tracking-wide text-zinc-400 uppercase">
+                Blutwurst / Pressware
+              </h2>
+              <p className="mt-1 text-sm text-zinc-400">
+                Fleischklassen oben zählen als Muskelfleischeinlage. Grundmasse
+                ist Blut, Schwarten und sonstige Nicht-Einlage.
+              </p>
+              <div className="mt-1">
+                <AmountRow
+                  id="grundmasse"
+                  name="Blut- / Schwarten-Grundmasse"
+                  hint={`Einlage mind. ${formatDe(leitsatz.minEinlage ?? 0, 1)} % der Gesamtmasse`}
+                  unit="kg"
+                  value={amounts.grundmasse ?? ""}
+                  onChange={(value) => updateAmount("grundmasse", value)}
+                />
+              </div>
+            </section>
+          ) : null}
+
+          {saladMode ? (
             <section className="mt-6">
               <h2 className="text-sm font-medium tracking-wide text-zinc-400 uppercase">
                 Salatanteile
               </h2>
               <p className="mt-1 text-sm text-zinc-400">
-                Diese Massen zählen zur Gesamtmasse und zum Leitsatzanteil.
+                Anteile bezogen auf die Gesamtmasse inkl. Soße.
               </p>
               <div className="mt-1">
-                {leitsatz.minFleischbrät != null ? (
+                {minCharakter != null ? (
                   <AmountRow
-                    id="fleischbraet"
-                    name="Fleischbrät"
-                    hint={`mind. ${formatDe(leitsatz.minFleischbrät, 1)} %`}
+                    id="charakter"
+                    name={saladCharakterLabel(leitsatz)}
+                    hint={`mind. ${formatDe(minCharakter, 1)} %`}
                     unit="kg"
-                    value={amounts.fleischbraet ?? ""}
-                    onChange={(value) => updateAmount("fleischbraet", value)}
+                    value={amounts.charakter ?? ""}
+                    onChange={(value) => updateAmount("charakter", value)}
                   />
                 ) : null}
                 {leitsatz.maxGurke != null ? (
                   <AmountRow
                     id="gurke"
-                    name="Gurke"
+                    name="Gurke / würzende Zutaten"
                     hint={`max. ${formatDe(leitsatz.maxGurke, 1)} %`}
                     unit="kg"
                     value={amounts.gurke ?? ""}
                     onChange={(value) => updateAmount("gurke", value)}
                   />
                 ) : null}
-                {leitsatz.minWurst != null ? (
+                {leitsatz.minFesteBestandteile != null ? (
                   <AmountRow
-                    id="wurst"
-                    name="Wurst"
-                    hint={`mind. ${formatDe(leitsatz.minWurst, 1)} %`}
+                    id="feste"
+                    name="Weitere feste Bestandteile"
+                    hint={`Feste Bestandteile gesamt mind. ${formatDe(leitsatz.minFesteBestandteile, 1)} %`}
                     unit="kg"
-                    value={amounts.wurst ?? ""}
-                    onChange={(value) => updateAmount("wurst", value)}
+                    value={amounts.feste ?? ""}
+                    onChange={(value) => updateAmount("feste", value)}
                   />
                 ) : null}
+                <AmountRow
+                  id="sosse"
+                  name="Mayonnaise / Salatcreme / Soße"
+                  hint="Zählt zur Gesamtmasse, nicht zur charaktergebenden Zutat"
+                  unit="kg"
+                  value={amounts.sosse ?? ""}
+                  onChange={(value) => updateAmount("sosse", value)}
+                />
+                <AmountRow
+                  id="salz"
+                  name="Kochsalz"
+                  hint="Absolute Menge in der Charge"
+                  unit="g"
+                  value={salt}
+                  onChange={setSalt}
+                />
               </div>
             </section>
           ) : null}
@@ -503,32 +569,38 @@ export default function Home() {
               detail="Einwaage der Charge"
               alert={false}
             />
-            <Kpi
-              label="BEFFE"
-              value={`${formatDe(result.beffe.percent, 1)} %`}
-              detail={
-                beffeDeviation
-                  ? `${formatKg(result.beffe.kg)} kg · Abweichung ${formatSigned(beffeDeviation.delta, 1)} %`
-                  : `${formatKg(result.beffe.kg)} kg`
-              }
-              alert={failed(result.leitsatz.deviations, "beffe")}
-            />
-            <Kpi
-              label="Fett"
-              value={`${formatDe(result.fett.percent, 1)} %`}
-              detail={
-                fettDeviation
-                  ? `${formatKg(result.fett.kg)} kg · Abweichung ${formatSigned(fettDeviation.delta, 1)} %`
-                  : `${formatKg(result.fett.kg)} kg`
-              }
-              alert={failed(result.leitsatz.deviations, "fett")}
-            />
-            <Kpi
-              label="Wasser"
-              value={`${formatDe(result.wasser.percent, 1)} %`}
-              detail={`${formatKg(result.wasser.kg)} kg`}
-              alert={false}
-            />
+            {!saladMode ? (
+              <Kpi
+                label="BEFFE"
+                value={`${formatDe(result.beffe.percent, 1)} %`}
+                detail={
+                  beffeDeviation
+                    ? `${formatKg(result.beffe.kg)} kg · Abweichung ${formatSigned(beffeDeviation.delta, 1)} %`
+                    : `${formatKg(result.beffe.kg)} kg`
+                }
+                alert={failed(result.leitsatz.deviations, "beffe")}
+              />
+            ) : null}
+            {!saladMode ? (
+              <Kpi
+                label="Fett"
+                value={`${formatDe(result.fett.percent, 1)} %`}
+                detail={
+                  fettDeviation
+                    ? `${formatKg(result.fett.kg)} kg · Abweichung ${formatSigned(fettDeviation.delta, 1)} %`
+                    : `${formatKg(result.fett.kg)} kg`
+                }
+                alert={failed(result.leitsatz.deviations, "fett")}
+              />
+            ) : null}
+            {!saladMode ? (
+              <Kpi
+                label="Wasser"
+                value={`${formatDe(result.wasser.percent, 1)} %`}
+                detail={`${formatKg(result.wasser.kg)} kg`}
+                alert={false}
+              />
+            ) : null}
             {leitsatz.minMFE != null ? (
               <Kpi
                 label="MFE"
@@ -541,6 +613,18 @@ export default function Home() {
                 alert={failed(result.leitsatz.deviations, "mfe")}
               />
             ) : null}
+            {einlageMode ? (
+              <Kpi
+                label="Einlage"
+                value={`${formatDe(result.einlage.percent, 1)} %`}
+                detail={
+                  einlageDeviation
+                    ? `${formatKg(result.einlage.kg)} kg · Abweichung ${formatSigned(einlageDeviation.delta, 1)} %`
+                    : `${formatKg(result.einlage.kg)} kg`
+                }
+                alert={failed(result.leitsatz.deviations, "einlage")}
+              />
+            ) : null}
           </div>
 
           {leitsatz.minMFE != null ? (
@@ -548,8 +632,14 @@ export default function Home() {
               MFE = BEFFE + BE, also das Fleischeiweiß der Charge.
             </p>
           ) : null}
+          {einlageMode ? (
+            <p className="text-sm text-zinc-400">
+              Muskelfleischeinlage = Fleischklassen-Masse bezogen auf die
+              Gesamtmasse inkl. Grundmasse.
+            </p>
+          ) : null}
 
-          {result.totalKg > 0 ? (
+          {result.totalKg > 0 && !saladMode ? (
             <p className="text-sm text-zinc-400">
               BE {formatDe(result.be.percent, 1)} % ({formatKg(result.be.kg)} kg)
               {" · "}ges. FS {formatDe(result.gesaettigteFettsaeuren.percent, 1)} % (
@@ -610,9 +700,10 @@ export default function Home() {
               {buttonLabel("avery", "Kopieren für Avery-Etikette")}
             </button>
             <p className="mt-3 text-xs leading-5 text-zinc-500">
-              Analysenwerte nach GEHA/Bizerba. Gesättigte Fettsäuren aus den
-              Klassenwerten. Kohlenhydrate und Zucker als pauschaler Ansatz für
-              Gewürze.
+              Analysenwerte nach GEHA/Bizerba bzw. den Leitsätzen des Deutschen
+              Lebensmittelbuchs. Gesättigte Fettsäuren aus den Klassenwerten.
+              Kohlenhydrate und Zucker als pauschaler Ansatz für Gewürze.
+              Feinkost-Nährwerte ohne Soßen-Fettdaten nur als Rohschätzung.
             </p>
           </section>
         </aside>

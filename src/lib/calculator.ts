@@ -9,6 +9,10 @@ import {
   formatBig7Clipboard as formatBig7ClipboardCore,
   formatDeNumber,
   big7Rows as big7RowsCore,
+  saladCharakterLabel,
+  saladMinCharakter,
+  usesEinlageLimits,
+  usesSaladLimits,
   type Big7,
   type Big7Row,
   type Fleischklasse,
@@ -25,6 +29,13 @@ export type Leitsatz = ProduktLeitsatz;
 export type { LeitsatzKategorie, Big7, Big7Row };
 export type Deviation = LeitsatzDeviation;
 
+export {
+  saladCharakterLabel,
+  saladMinCharakter,
+  usesEinlageLimits,
+  usesSaladLimits,
+};
+
 export type MassShare = {
   kg: number;
   percent: number;
@@ -38,6 +49,7 @@ export type RecipeResult = {
   fett: MassShare;
   gesaettigteFettsaeuren: MassShare;
   mfe: MassShare;
+  einlage: MassShare;
   leitsatz: LeitsatzStatus;
   big7: Big7;
 };
@@ -84,11 +96,18 @@ export function calculateRecipe(input: {
   amountsKg: Record<string, number>;
   saltGrams: number;
   leitsatz: Leitsatz;
-  fleischbraetKg?: number;
+  charakterKg?: number;
   gurkeKg?: number;
+  festeKg?: number;
+  sosseKg?: number;
+  grundmasseKg?: number;
+  /** @deprecated */
+  fleischbraetKg?: number;
+  /** @deprecated */
   wurstKg?: number;
 }): RecipeResult {
   let classKg = 0;
+  let meatKg = 0;
   let wasserKg = 0;
   let beffeKg = 0;
   let beKg = 0;
@@ -100,6 +119,7 @@ export function calculateRecipe(input: {
     if (kg === 0) continue;
 
     classKg += kg;
+    if (meatClass.id !== "EIS") meatKg += kg;
     wasserKg += (kg * meatClass.wasser) / 100;
     beffeKg += (kg * meatClass.beffe) / 100;
     beKg += (kg * meatClass.be) / 100;
@@ -107,33 +127,47 @@ export function calculateRecipe(input: {
     gesFsKg += (kg * meatClass.ges_fs) / 100;
   }
 
-  const usesSalad =
-    input.leitsatz.minFleischbrät != null ||
-    input.leitsatz.maxGurke != null ||
-    input.leitsatz.minWurst != null;
-  const fleischbraetKg = usesSalad ? positiveAmount(input.fleischbraetKg) : 0;
-  const gurkeKg = usesSalad ? positiveAmount(input.gurkeKg) : 0;
-  const wurstKg = usesSalad ? positiveAmount(input.wurstKg) : 0;
-  const totalKg = classKg + fleischbraetKg + gurkeKg + wurstKg;
+  const salad = usesSaladLimits(input.leitsatz);
+  const einlageMode = usesEinlageLimits(input.leitsatz);
+  const charakterKg = salad
+    ? positiveAmount(
+        input.charakterKg ?? input.fleischbraetKg ?? input.wurstKg,
+      )
+    : 0;
+  const gurkeKg = salad ? positiveAmount(input.gurkeKg) : 0;
+  const festeKg = salad ? positiveAmount(input.festeKg) : 0;
+  const sosseKg = salad ? positiveAmount(input.sosseKg) : 0;
+  const grundmasseKg = einlageMode ? positiveAmount(input.grundmasseKg) : 0;
+
+  const totalKg =
+    classKg + charakterKg + gurkeKg + festeKg + sosseKg + grundmasseKg;
   const wasser = share(wasserKg, totalKg);
   const beffe = share(beffeKg, totalKg);
   const be = share(beKg, totalKg);
   const fett = share(fettKg, totalKg);
   const gesaettigteFettsaeuren = share(gesFsKg, totalKg);
   const mfe = share(beffeKg + beKg, totalKg);
+  const einlage = share(meatKg, totalKg);
   const hasMass = totalKg > 0;
   const saltGrams = hasMass ? positiveAmount(input.saltGrams) : 0;
 
   const big7 = computeBig7(
     {
       totalProductKg: totalKg,
-      totalMeatKg: classKg,
+      totalMeatKg: meatKg,
       fatPercentage: fett.percent,
       saturatedFatPercentage: gesaettigteFettsaeuren.percent,
       totalProteinPercentage: mfe.percent,
     },
     { saltGrams },
   );
+
+  const charakterPercent =
+    totalKg > 0 ? (charakterKg / totalKg) * 100 : 0;
+  const festePercent =
+    totalKg > 0
+      ? ((charakterKg + gurkeKg + festeKg) / totalKg) * 100
+      : 0;
 
   return {
     totalKg,
@@ -143,15 +177,17 @@ export function calculateRecipe(input: {
     fett,
     gesaettigteFettsaeuren,
     mfe,
+    einlage,
     leitsatz: checkProduktLeitsatz(
       input.leitsatz,
       {
         beffe: beffe.percent,
         fett: fett.percent,
         mfe: mfe.percent,
-        fleischbraet: totalKg > 0 ? (fleischbraetKg / totalKg) * 100 : 0,
+        einlage: einlage.percent,
+        charakter: charakterPercent,
         gurke: totalKg > 0 ? (gurkeKg / totalKg) * 100 : 0,
-        wurst: totalKg > 0 ? (wurstKg / totalKg) * 100 : 0,
+        feste: festePercent,
       },
       hasMass,
     ),

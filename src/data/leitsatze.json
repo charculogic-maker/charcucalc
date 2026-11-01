@@ -1,71 +1,366 @@
 {
-  "2.222.1": {
-    "id": "2.222.1",
+  "2.4.2.1.1": {
+    "id": "2.4.2.1.1",
     "kategorie": "Brühwurst",
-    "name": "Schinkenwurst / Brühwurst fein",
+    "name": "Würstchen nach Frankfurter Art / Schinkenwürstchen",
     "minBEFFE": 8.0,
-    "maxFett": 30.0
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse, Analysenwert gebrüht"
   },
-  "2.223.1": {
-    "id": "2.223.1",
+  "2.4.2.1.2": {
+    "id": "2.4.2.1.2",
     "kategorie": "Brühwurst",
-    "name": "Schinkenspicker / Bierwurst mit Einlage",
-    "minBEFFE": 9.5,
-    "maxFett": 28.0
+    "name": "Wiener / Bockwurst / Würstchen",
+    "minBEFFE": 8.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.2.1.3": {
+    "id": "2.4.2.1.3",
+    "kategorie": "Brühwurst",
+    "name": "Pfälzer / Regensburger / Debreziner / Jagdwürstchen",
+    "minBEFFE": 8.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.2.1.6": {
+    "id": "2.4.2.1.6",
+    "kategorie": "Brühwurst",
+    "name": "Kalbsbratwurst / Weißwurst",
+    "minBEFFE": 7.5,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.2.1.8": {
+    "id": "2.4.2.1.8",
+    "kategorie": "Brühwurst",
+    "name": "Münchner Weißwurst",
+    "minBEFFE": 6.5,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.2.1.10": {
+    "id": "2.4.2.1.10",
+    "kategorie": "Brühwurst",
+    "name": "Grobe Bratwurst / Fränkische Bratwurst",
+    "minBEFFE": 8.5,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.2.1.11": {
+    "id": "2.4.2.1.11",
+    "kategorie": "Brühwurst",
+    "name": "Bratwurst / Rostbratwurst fein",
+    "minBEFFE": 8.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.2.2.1": {
+    "id": "2.4.2.2.1",
+    "kategorie": "Brühwurst",
+    "name": "Lyoner / Schinkenwurst / Mortadella / Fleischwurst",
+    "minBEFFE": 8.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.2.2.2": {
+    "id": "2.4.2.2.2",
+    "kategorie": "Brühwurst",
+    "name": "Fleischkäse / Leberkäse / Stadtwurst",
+    "minBEFFE": 7.5,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.2.2.5": {
+    "id": "2.4.2.2.5",
+    "kategorie": "Brühwurst",
+    "name": "Fleischsalatgrundlage / Fleischbrät",
+    "minBEFFE": 7.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
   },
   "2.4.2.2.6": {
     "id": "2.4.2.2.6",
     "kategorie": "Brühwurst",
-    "name": "Gelbwurst / Kalbskäse",
-    "minBEFFE": 9.5,
-    "maxFett": 30.0
-  },
-  "2.2312.1": {
-    "id": "2.2312.1",
-    "kategorie": "Kochwurst",
-    "name": "Deli Leberwurst fein",
-    "minBEFFE": 10.0,
-    "maxFett": 35.0
-  },
-  "2.2312.6": {
-    "id": "2.2312.6",
-    "kategorie": "Kochwurst",
-    "name": "Grobe Hausmacher Leberwurst",
+    "name": "Gelbwurst / Kalbskäse / Weißer Fleischkäse",
     "minBEFFE": 7.5,
-    "maxFett": 40.0
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
   },
-  "2.232.3": {
-    "id": "2.232.3",
-    "kategorie": "Kochwurst",
-    "name": "Hausmacher Rotwurst / Blutwurst",
-    "minMFE": 35.0,
-    "maxFett": 35.0
+  "2.4.2.3.1": {
+    "id": "2.4.2.3.1",
+    "kategorie": "Brühwurst",
+    "name": "Bayerische Bierwurst / Jagdwurst / Kochsalami / Krakauer",
+    "minBEFFE": 9.5,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
   },
-  "2.2333.4": {
-    "id": "2.2333.4",
+  "2.4.2.3.2": {
+    "id": "2.4.2.3.2",
+    "kategorie": "Brühwurst",
+    "name": "Jagdwurst norddeutsche Art / Grobe Schinkenwurst",
+    "minBEFFE": 8.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.2.3.3": {
+    "id": "2.4.2.3.3",
+    "kategorie": "Brühwurst",
+    "name": "Grober Leberkäse / Grobe Fleischwurst",
+    "minBEFFE": 8.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.2.4.1": {
+    "id": "2.4.2.4.1",
+    "kategorie": "Brühwurst",
+    "name": "Bierschinken / Schinkenpastete",
+    "minBEFFE": 13.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.1.1.2": {
+    "id": "2.4.1.1.2",
+    "kategorie": "Rohwurst",
+    "name": "Salami / Katenrauchwurst / Mettwurst (schnittfest)",
+    "minBEFFE": 13.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse (Kaliber über 70 mm: 12,5 %)"
+  },
+  "2.4.1.1.4": {
+    "id": "2.4.1.1.4",
+    "kategorie": "Rohwurst",
+    "name": "Cervelatwurst",
+    "minBEFFE": 11.5,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse (Kaliber über 70 mm: 11 %)"
+  },
+  "2.4.1.1.5": {
+    "id": "2.4.1.1.5",
+    "kategorie": "Rohwurst",
+    "name": "Schinkenmettwurst / Feldkieker",
+    "minBEFFE": 12.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.1.1.14": {
+    "id": "2.4.1.1.14",
+    "kategorie": "Rohwurst",
+    "name": "Landjäger / Peperoni / Kaminwurzen",
+    "minBEFFE": 10.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.1.2.1": {
+    "id": "2.4.1.2.1",
+    "kategorie": "Rohwurst",
+    "name": "Teewurst / Grobe Teewurst",
+    "minBEFFE": 10.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse (fein zerkleinert)"
+  },
+  "2.4.1.2.2": {
+    "id": "2.4.1.2.2",
+    "kategorie": "Rohwurst",
+    "name": "Streichmettwurst / Braunschweiger",
+    "minBEFFE": 10.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.3.2.1": {
+    "id": "2.4.3.2.1",
     "kategorie": "Kochwurst",
-    "name": "Schwartemagen",
-    "minMFE": 30.0,
-    "maxFett": 30.0
+    "name": "Kalbsleberwurst / Trüffelleberwurst",
+    "minBEFFE": 10.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.3.2.3": {
+    "id": "2.4.3.2.3",
+    "kategorie": "Kochwurst",
+    "name": "Fleisch-Leberwurst / Schinken-Leberwurst",
+    "minBEFFE": 10.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.3.2.5": {
+    "id": "2.4.3.2.5",
+    "kategorie": "Kochwurst",
+    "name": "Leberwurst / Gutsleberwurst / Braunschweiger Leberwurst",
+    "minBEFFE": 9.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.3.2.6": {
+    "id": "2.4.3.2.6",
+    "kategorie": "Kochwurst",
+    "name": "Hausmacherleberwurst / Bauernleberwurst",
+    "minBEFFE": 7.5,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.3.3.2": {
+    "id": "2.4.3.3.2",
+    "kategorie": "Kochwurst",
+    "name": "Gekochte Mettwurst / Kochmettwurst",
+    "minBEFFE": 8.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse"
+  },
+  "2.4.3.4.1": {
+    "id": "2.4.3.4.1",
+    "kategorie": "Kochwurst",
+    "name": "Filet-Rotwurst / Böhmische Rotwurst / Blutwurst mit Einlagen",
+    "minEinlage": 35.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse (Muskelfleischeinlagen)"
+  },
+  "2.4.3.4.4": {
+    "id": "2.4.3.4.4",
+    "kategorie": "Kochwurst",
+    "name": "Gutsrotwurst / Fleischrotwurst / Fleischmagen",
+    "minEinlage": 30.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse (Muskelfleischeinlagen)"
+  },
+  "2.4.3.4.7": {
+    "id": "2.4.3.4.7",
+    "kategorie": "Kochwurst",
+    "name": "Hausmacher Rotwurst / Bauernrotwurst / Landrotwurst",
+    "minEinlage": 15.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse (Muskelfleischeinlagen)"
+  },
+  "2.4.3.4.8": {
+    "id": "2.4.3.4.8",
+    "kategorie": "Kochwurst",
+    "name": "Roter Schwartemagen / Blutpresssack / Presswurst",
+    "minEinlage": 10.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse (Muskelfleischeinlagen)"
+  },
+  "2.4.3.5.3.1": {
+    "id": "2.4.3.5.3.1",
+    "kategorie": "Kochwurst",
+    "name": "Weißer Fleischmagen / Schinkenmagen / Wiener Presskopf",
+    "minEinlage": 35.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse (Muskelfleischeinlagen)"
+  },
+  "2.4.3.5.3.2": {
+    "id": "2.4.3.5.3.2",
+    "kategorie": "Kochwurst",
+    "name": "Kasseler Schwartenmagen / Presssülze / Sülzwurst",
+    "minEinlage": 20.0,
+    "quelle": "Leitsätze Fleisch und Fleischerzeugnisse (Muskelfleischeinlagen)"
   },
   "2.1.1": {
     "id": "2.1.1",
     "kategorie": "Feinkostsalat",
-    "name": "Fleischsalat (Standard)",
-    "minFleischbrät": 28.0,
-    "maxGurke": 25.0
+    "name": "Fleischsalat",
+    "minCharakter": 28.0,
+    "charakterLabel": "Fleischbrät / Brühwurst",
+    "maxGurke": 25.0,
+    "quelle": "Leitsätze für Feinkostsalate"
   },
   "2.1.2": {
     "id": "2.1.2",
     "kategorie": "Feinkostsalat",
-    "name": "Delikatess-Fleischsalat",
-    "minFleischbrät": 34.0,
-    "maxGurke": 16.0
+    "name": "Delikatess-Fleischsalat / Feiner Fleischsalat",
+    "minCharakter": 34.0,
+    "charakterLabel": "Fleischbrät / Brühwurst",
+    "maxGurke": 16.0,
+    "quelle": "Leitsätze für Feinkostsalate"
+  },
+  "2.1.3": {
+    "id": "2.1.3",
+    "kategorie": "Feinkostsalat",
+    "name": "Budapester Salat",
+    "minCharakter": 20.0,
+    "charakterLabel": "Fleischbrät / Brühwurst",
+    "minFesteBestandteile": 55.0,
+    "quelle": "Leitsätze für Feinkostsalate"
   },
   "2.1.4": {
     "id": "2.1.4",
     "kategorie": "Feinkostsalat",
     "name": "Wurstsalat",
-    "minWurst": 50.0
+    "minCharakter": 50.0,
+    "charakterLabel": "Wurst",
+    "quelle": "Leitsätze für Feinkostsalate"
+  },
+  "2.1.4-mayo": {
+    "id": "2.1.4-mayo",
+    "kategorie": "Feinkostsalat",
+    "name": "Wurstsalat mit Mayonnaise",
+    "minCharakter": 30.0,
+    "charakterLabel": "Wurst",
+    "maxGurke": 25.0,
+    "quelle": "Leitsätze für Feinkostsalate (Besondere Merkmale)"
+  },
+  "2.1.5": {
+    "id": "2.1.5",
+    "kategorie": "Feinkostsalat",
+    "name": "Geflügelsalat",
+    "minCharakter": 25.0,
+    "charakterLabel": "gegartes Geflügelfleisch",
+    "quelle": "Leitsätze für Feinkostsalate"
+  },
+  "2.2.1": {
+    "id": "2.2.1",
+    "kategorie": "Feinkostsalat",
+    "name": "Heringssalat",
+    "minCharakter": 25.0,
+    "charakterLabel": "marinierte Heringsfiletteile",
+    "quelle": "Leitsätze für Feinkostsalate (üblicherweise ≥ 30 %)"
+  },
+  "2.2.2": {
+    "id": "2.2.2",
+    "kategorie": "Feinkostsalat",
+    "name": "Delikatess-Heringssalat / Feiner Heringssalat",
+    "minCharakter": 35.0,
+    "charakterLabel": "marinierte Heringsfiletteile",
+    "quelle": "Leitsätze für Feinkostsalate"
+  },
+  "2.2.3": {
+    "id": "2.2.3",
+    "kategorie": "Feinkostsalat",
+    "name": "Matjessalat",
+    "minCharakter": 50.0,
+    "charakterLabel": "Matjesfiletteile",
+    "quelle": "Leitsätze für Feinkostsalate"
+  },
+  "2.2.4": {
+    "id": "2.2.4",
+    "kategorie": "Feinkostsalat",
+    "name": "Thunfischsalat",
+    "minCharakter": 20.0,
+    "charakterLabel": "gegarter Thunfisch",
+    "quelle": "Leitsätze für Feinkostsalate"
+  },
+  "2.2.5": {
+    "id": "2.2.5",
+    "kategorie": "Feinkostsalat",
+    "name": "Lachssalat / Makrelensalat / weitere Fischsalate",
+    "minCharakter": 20.0,
+    "charakterLabel": "Fischfiletteile",
+    "quelle": "Leitsätze für Feinkostsalate"
+  },
+  "2.3.1": {
+    "id": "2.3.1",
+    "kategorie": "Feinkostsalat",
+    "name": "Shrimpssalat / Garnelensalat / Nordsee-Krabbensalat",
+    "minCharakter": 40.0,
+    "charakterLabel": "Garnelenschwänze",
+    "quelle": "Leitsätze für Feinkostsalate"
+  },
+  "2.4.1": {
+    "id": "2.4.1",
+    "kategorie": "Feinkostsalat",
+    "name": "Kartoffelsalat",
+    "minCharakter": 50.0,
+    "charakterLabel": "gegarte Kartoffeln",
+    "quelle": "Leitsätze für Feinkostsalate (üblicherweise)"
+  },
+  "2.4.2": {
+    "id": "2.4.2",
+    "kategorie": "Feinkostsalat",
+    "name": "Eiersalat",
+    "minCharakter": 40.0,
+    "charakterLabel": "gegarte Eier",
+    "quelle": "Leitsätze für Feinkostsalate"
+  },
+  "2.4.3": {
+    "id": "2.4.3",
+    "kategorie": "Feinkostsalat",
+    "name": "Krautsalat / Coleslaw",
+    "minCharakter": 40.0,
+    "charakterLabel": "Weißkohl / Weißkraut",
+    "quelle": "Leitsätze für Feinkostsalate"
+  },
+  "2.4.3-mayo": {
+    "id": "2.4.3-mayo",
+    "kategorie": "Feinkostsalat",
+    "name": "Coleslaw mit Mayonnaise",
+    "minCharakter": 35.0,
+    "charakterLabel": "Weißkohl / Weißkraut",
+    "quelle": "Leitsätze für Feinkostsalate (Besondere Merkmale)"
+  },
+  "2.4.4": {
+    "id": "2.4.4",
+    "kategorie": "Feinkostsalat",
+    "name": "Nudelsalat",
+    "minCharakter": 35.0,
+    "charakterLabel": "gegarte Nudeln",
+    "quelle": "Leitsätze für Feinkostsalate"
   }
 }

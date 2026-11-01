@@ -3,6 +3,10 @@ import type {
   LeitsatzStatus,
   ProduktLeitsatz,
 } from "./types";
+import {
+  saladCharakterLabel,
+  saladMinCharakter,
+} from "./leitsaetze";
 import { formatDeNumber } from "./nutritionLabel";
 
 function roundTo(value: number, digits: number): number {
@@ -42,22 +46,33 @@ function pushLimit(
   });
 }
 
-/** CharcuCalc-style product Leitsatz check (BEFFE/Fett/MFE/Salat). */
+/** CharcuCalc-style product Leitsatz check (BEFFE/Fett/MFE/Einlage/Salat). */
 export function checkProduktLeitsatz(
   leitsatz: ProduktLeitsatz,
   actuals: {
     beffe: number;
     fett: number;
     mfe: number;
-    fleischbraet: number;
-    gurke: number;
-    wurst: number;
+    einlage?: number;
+    charakter?: number;
+    feste?: number;
+    /** @deprecated prefer charakter */
+    fleischbraet?: number;
+    gurke?: number;
+    /** @deprecated prefer charakter */
+    wurst?: number;
   },
   hasMass: boolean,
 ): LeitsatzStatus {
   if (!hasMass) {
     return { passed: false, message: "Keine Einwaage", deviations: [] };
   }
+
+  const charakterActual =
+    actuals.charakter ??
+    actuals.fleischbraet ??
+    actuals.wurst ??
+    0;
 
   const deviations: LeitsatzDeviation[] = [];
   pushLimit(deviations, {
@@ -75,6 +90,13 @@ export function checkProduktLeitsatz(
     direction: "min",
   });
   pushLimit(deviations, {
+    id: "einlage",
+    label: "Muskelfleischeinlage",
+    actual: actuals.einlage ?? 0,
+    limit: leitsatz.minEinlage,
+    direction: "min",
+  });
+  pushLimit(deviations, {
     id: "fett",
     label: "Fett",
     actual: actuals.fett,
@@ -82,24 +104,24 @@ export function checkProduktLeitsatz(
     direction: "max",
   });
   pushLimit(deviations, {
-    id: "fleischbraet",
-    label: "Fleischbrät",
-    actual: actuals.fleischbraet,
-    limit: leitsatz.minFleischbrät,
+    id: "charakter",
+    label: saladCharakterLabel(leitsatz),
+    actual: charakterActual,
+    limit: saladMinCharakter(leitsatz),
     direction: "min",
   });
   pushLimit(deviations, {
     id: "gurke",
-    label: "Gurke",
-    actual: actuals.gurke,
+    label: "Gurke / würzende Zutaten",
+    actual: actuals.gurke ?? 0,
     limit: leitsatz.maxGurke,
     direction: "max",
   });
   pushLimit(deviations, {
-    id: "wurst",
-    label: "Wurst",
-    actual: actuals.wurst,
-    limit: leitsatz.minWurst,
+    id: "feste",
+    label: "Feste Bestandteile",
+    actual: actuals.feste ?? 0,
+    limit: leitsatz.minFesteBestandteile,
     direction: "min",
   });
 

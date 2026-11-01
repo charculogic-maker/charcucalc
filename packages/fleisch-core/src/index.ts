@@ -27,6 +27,10 @@ export {
   findProduktLeitsatz,
   produktLeitsaetzeList,
   resolveMaxFettPct,
+  saladCharakterLabel,
+  saladMinCharakter,
+  usesEinlageLimits,
+  usesSaladLimits,
 } from "./leitsaetze";
 
 export {

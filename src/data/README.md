@@ -5,3 +5,7 @@ Canonical meat classes and product Leitsätze live in
 
 The JSON files here are kept only as a human-readable snapshot for diffs;
 the app imports from the package.
+
+`leitsatze.json` mirrors `PRODUKT_LEITSAETZE` after the Leitsatz-PDF expansion
+(Fleisch & Fleischerzeugnisse + Feinkostsalate): official DLMB numbers, BEFFE /
+Muskelfleischeinlage minima, and Feinkost character-share limits.

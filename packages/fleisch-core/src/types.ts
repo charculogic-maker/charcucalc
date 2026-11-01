@@ -5,6 +5,7 @@ export type MeatClassLager = "FRIDGE" | "FREEZER";
 export type LeitsatzKategorie =
   | "Brühwurst"
   | "Kochwurst"
+  | "Rohwurst"
   | "Feinkostsalat";
 
 /** Bizerba/GEHA class as stored in CharcuCalc JSON. */
@@ -29,9 +30,18 @@ export type ProduktLeitsatz = {
   minBEFFE?: number;
   maxFett?: number;
   minMFE?: number;
-  minFleischbrät?: number;
+  /** Muskelfleischeinlagen (Blutwurst / Presssack), Gewichtsanteil */
+  minEinlage?: number;
+  /** Charaktergebende Zutat bei Feinkostsalaten */
+  minCharakter?: number;
+  charakterLabel?: string;
   maxGurke?: number;
+  minFesteBestandteile?: number;
+  /** @deprecated prefer minCharakter */
+  minFleischbrät?: number;
+  /** @deprecated prefer minCharakter */
   minWurst?: number;
+  quelle?: string;
 };
 
 /** OS-facing meat-class shape (protein = BEFFE + BE). */
